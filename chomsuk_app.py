@@ -57,25 +57,26 @@ elif selected == "🎨 สตูดิโอเจนภาพ":
 # --- ฟีเจอร์ใหม่ที่อาจารย์ต้องการ ---
 elif selected == "🎵 สตูดิโอแต่งเพลง":
     st.title("🎵 AI Songwriter Studio (Suno Edition)")
-    st.subheader("เปลี่ยนไอเดียให้เป็นเพลงฮิตสำหรับ Suno.com")
+    st.markdown("เปลี่ยนไอเดียให้เป็นเพลงฮิตสำหรับ [Suno.com](https://suno.com) 🔗")
     
-    song_topic = st.text_area("อยากแต่งเพลงเกี่ยวกับอะไร? (ระบุชื่อแบรนด์หรือเนื้อหาที่ต้องการ):")
+    song_topic = st.text_area("ระบุชื่อแบรนด์หรือเนื้อหาที่ต้องการแต่งเพลง:", placeholder="เช่น ช่างเชื่อมบุรีรัมย์, สบู่ชมนึก...")
     
     if st.button("🎸 เสกเนื้อเพลง + สไตล์เพลง"):
         if song_topic:
-            with st.spinner("Chomsuk.ai กำลังประพันธ์เพลง..."):
+            with st.spinner("Chomsuk.ai กำลังแต่งเพลง..."):
+                # พรอมต์ที่คุมโครงสร้าง Suno เป๊ะๆ
                 music_prompt = f"""คุณคือ Chomsuk.ai นักแต่งเพลงมือโปร
                 หัวข้อเพลง: {song_topic}
                 
-                กรุณาสร้างข้อมูล 2 ส่วนสำหรับใช้ใน Suno.com:
-                1. 📑 [Lyrics]: เขียนเนื้อเพลงภาษาไทยที่มีโครงสร้าง [Verse 1], [Chorus], [Verse 2], [Outro] ให้ซึ้งหรือมันส์ตามความเหมาะสม
-                2. 🎧 [Style of Music]: เขียนคำสั่งภาษาอังกฤษ (Style Prompt) สำหรับช่อง Style ใน Suno เช่นแนวเพลง, เครื่องดนตรี (เช่น Thai Rock, 808 Bass, Melodic)
+                กรุณาสร้างข้อมูลสำหรับ Suno.com ดังนี้:
+                1. 📑 [Lyrics]: เขียนเนื้อเพลงภาษาไทยที่มีโครงสร้าง [Verse 1], [Chorus], [Verse 2], [Bridge], [Outro] 
+                   เน้นคำที่ทรงพลังและกินใจเหมือนเพลง 'คอนเสิร์ตเชื่อมใจ'
+                2. 🎧 [Style of Music]: เขียนคำสั่งภาษาอังกฤษสำหรับช่อง Style (เช่น Melodic Thai Rock, Heavy Drums, 120 BPM)
                 """
                 response = model.generate_content(music_prompt)
                 st.markdown("---")
                 st.markdown(response.text)
-        else:
-            st.warning("ใส่หัวข้อก่อนนะครับอาจารย์!")
+                st.button("📋 คัดลอกเนื้อเพลงทั้งหมด")
 
 elif selected == "💳 สมัคร VIP":
     st.title("💳 Chomsuk.ai VIP")
