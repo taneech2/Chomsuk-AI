@@ -6,8 +6,8 @@ import google.generativeai as genai
 st.set_page_config(page_title="Chomsuk.ai - All-in-One AI", page_icon="🏆", layout="wide")
 
 # 🔑 ใส่ API Key ของอาจารย์ตรงนี้ (ห้ามลบเครื่องหมายคำพูดนะครับ)
-genai.configure(api_key="ใส่_API_KEY_ของอาจารย์ตรงนี้")
-model = genai.GenerativeModel('gemini-1.5-flash')
+genai.configure(api_key="AIzaSyB3KUHl5xoci9Cr_XS4WSf6hxIN8vXV7Bs")
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # 2. เมนู Sidebar (เพิ่มเมนูแต่งเพลงเข้าไปแล้วครับ)
 with st.sidebar:
