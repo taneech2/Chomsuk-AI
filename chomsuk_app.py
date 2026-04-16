@@ -5,13 +5,16 @@ import google.generativeai as genai
 # 1. การตั้งค่าหน้าจอและธีม
 st.set_page_config(page_title="Chomsuk.ai - All-in-One AI", page_icon="🏆", layout="wide")
 
-# 🔒 ใช้ Streamlit Secrets แทนการเขียนรหัสลงในโค้ดตรงๆ
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-model = genai.GenerativeModel('gemini-2.5-flash')
+# 🔒 ใช้ Streamlit Secrets และเปลี่ยนเป็นรุ่น 2.0 Flash เพื่อความเสถียรครับ
+try:
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+    model = genai.GenerativeModel('gemini-2.0-flash')
+except:
+    st.error("🔑 กรุณาตรวจสอบการตั้งค่า GEMINI_API_KEY ใน Streamlit Secrets นะครับ")
 
-# 2. เมนู Sidebar (เพิ่มเมนูแต่งเพลงเข้าไปแล้วครับ)
+# 2. เมนู Sidebar
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103633.png", width=80) # โลโก้สมมติ
+    st.image("https://cdn-icons-png.flaticon.com/512/2103/2103633.png", width=80) 
     selected = option_menu(
         menu_title="เมนู Chomsuk.ai",
         options=["💡 หาไอเดีย/หัวข้อ", "✍️ เสกคอนเทนต์", "🎨 สตูดิโอเจนภาพ", "🎵 สตูดิโอแต่งเพลง", "💳 สมัคร VIP"],
@@ -33,50 +36,79 @@ with st.sidebar:
 if selected == "💡 หาไอเดีย/หัวข้อ":
     st.title("💡 หาไอเดียทำคอนเทนต์เงินล้าน")
     topic = st.text_input("คุณอยากทำเรื่องอะไร?", placeholder="เช่น การซ่อมมือถือ, การลงทุน")
+    
     if st.button("ปั้นไอเดีย!"):
-        with st.spinner("กำลังใช้สมองกลคิดให้ครับ..."):
-            res = model.generate_content(f"ขอ 5 ไอเดียทำคลิป TikTok เกี่ยวกับ {topic} ให้ไวรัล")
-            st.info(res.text)
+        if topic:
+            with st.spinner("Chomsuk.ai กำลังใช้สมองกลคิดให้ครับ..."):
+                try:
+                    # ปรับพรอมต์ให้สร้างไอเดียพร้อม Video Prompt สำหรับ AI Video
+                    idea_prompt = f"""คุณคือ Chomsuk.ai นักปั้น Content Creator
+                    หัวข้อ: {topic}
+                    ขอ 5 ไอเดียทำคลิปสั้นให้ไวรัล โดยแต่ละไอเดียต้องมี:
+                    1. ชื่อหัวข้อที่น่าดึงดูด
+                    2. สรุปเนื้อหาใน 1 ประโยค
+                    3. 🎬 Video Prompt (ภาษาอังกฤษ) สำหรับเอาไปเจนวิดีโอต่อใน AI (เช่น Kling, Luma, Sora)
+                    """
+                    res = model.generate_content(idea_prompt)
+                    st.info(res.text)
+                    st.markdown("---")
+                    st.caption("🚀 อาจารย์ก๊อปปี้ Video Prompt ด้านบนไปใช้ในเครื่องมือเจนวิดีโอได้เลยครับ!")
+                except Exception as e:
+                    st.error("🔌 ระบบขัดข้อง: โควต้าอาจจะเต็ม หรือการเชื่อมต่อมีปัญหา ลองกดใหม่อีกครั้งนะครับอาจารย์")
+        else:
+            st.warning("กรุณาใส่หัวข้อก่อนนะครับ!")
 
 elif selected == "✍️ เสกคอนเทนต์":
     st.title("✍️ เสกคอนเทนต์ (Script Generator)")
     detail = st.text_area("ใส่รายละเอียดสินค้า/บริการ:")
     if st.button("เขียนสคริปต์เลย"):
-        with st.spinner("กำลังเขียนบท..."):
-            res = model.generate_content(f"เขียนสคริปต์ TikTok ขาย {detail} แบบเร้าใจ แยกเป็นฉากๆ")
-            st.success(res.text)
+        if detail:
+            with st.spinner("กำลังเขียนบท..."):
+                try:
+                    res = model.generate_content(f"เขียนสคริปต์ TikTok ขาย {detail} แบบเร้าใจ แยกเป็นฉากๆ")
+                    st.success(res.text)
+                except:
+                    st.error("🔌 โควต้าใช้งานวันนี้อาจจะเต็มแล้วครับ")
+        else:
+            st.warning("ใส่รายละเอียดก่อนนะครับ")
 
 elif selected == "🎨 สตูดิโอเจนภาพ":
     st.title("🎨 AI Image Prompt Studio")
     img_desc = st.text_input("บรรยายภาพที่อยากได้ (ภาษาไทย):")
     if st.button("แปลงเป็น Prompt อังกฤษ"):
-        with st.spinner("กำลังแปลเป็นภาษา AI..."):
-            res = model.generate_content(f"แปลและปรับแก้ข้อความนี้ให้เป็น Image Prompt ภาษาอังกฤษที่ละเอียดสำหรับ AI: {img_desc}")
-            st.code(res.text, language='text')
+        if img_desc:
+            with st.spinner("กำลังแปลเป็นภาษา AI..."):
+                try:
+                    res = model.generate_content(f"แปลและปรับแก้ข้อความนี้ให้เป็น Image Prompt ภาษาอังกฤษที่ละเอียดสำหรับ AI: {img_desc}")
+                    st.code(res.text, language='text')
+                except:
+                    st.error("🔌 ระบบไม่ตอบสนอง ลองใหม่อีกครั้งครับ")
+        else:
+            st.warning("บอกรายละเอียดภาพก่อนนะครับ")
 
-# --- ฟีเจอร์ใหม่ที่อาจารย์ต้องการ ---
 elif selected == "🎵 สตูดิโอแต่งเพลง":
     st.title("🎵 AI Songwriter Studio (Suno Edition)")
     st.markdown("เปลี่ยนไอเดียให้เป็นเพลงฮิตสำหรับ [Suno.com](https://suno.com) 🔗")
     
-    song_topic = st.text_area("ระบุชื่อแบรนด์หรือเนื้อหาที่ต้องการแต่งเพลง:", placeholder="เช่น ช่างเชื่อมบุรีรัมย์, สบู่ชมนึก...")
+    song_topic = st.text_area("ระบุชื่อแบรนด์หรือเนื้อหาที่ต้องการแต่งเพลง:", placeholder="เช่น ช่างเชื่อมบุรีรัมย์...")
     
     if st.button("🎸 เสกเนื้อเพลง + สไตล์เพลง"):
         if song_topic:
             with st.spinner("Chomsuk.ai กำลังแต่งเพลง..."):
-                # พรอมต์ที่คุมโครงสร้าง Suno เป๊ะๆ
-                music_prompt = f"""คุณคือ Chomsuk.ai นักแต่งเพลงมือโปร
-                หัวข้อเพลง: {song_topic}
-                
-                กรุณาสร้างข้อมูลสำหรับ Suno.com ดังนี้:
-                1. 📑 [Lyrics]: เขียนเนื้อเพลงภาษาไทยที่มีโครงสร้าง [Verse 1], [Chorus], [Verse 2], [Bridge], [Outro] 
-                   เน้นคำที่ทรงพลังและกินใจเหมือนเพลง 'คอนเสิร์ตเชื่อมใจ'
-                2. 🎧 [Style of Music]: เขียนคำสั่งภาษาอังกฤษสำหรับช่อง Style (เช่น Melodic Thai Rock, Heavy Drums, 120 BPM)
-                """
-                response = model.generate_content(music_prompt)
-                st.markdown("---")
-                st.markdown(response.text)
-                st.button("📋 คัดลอกเนื้อเพลงทั้งหมด")
+                try:
+                    music_prompt = f"""คุณคือ Chomsuk.ai นักแต่งเพลงมือโปร
+                    หัวข้อเพลง: {song_topic}
+                    กรุณาสร้างข้อมูลสำหรับ Suno.com ดังนี้:
+                    1. 📑 [Lyrics]: เขียนเนื้อเพลงภาษาไทยที่มีโครงสร้าง [Verse 1], [Chorus], [Verse 2], [Bridge], [Outro]
+                    2. 🎧 [Style of Music]: เขียนคำสั่งภาษาอังกฤษสำหรับช่อง Style
+                    """
+                    response = model.generate_content(music_prompt)
+                    st.markdown("---")
+                    st.markdown(response.text)
+                except:
+                    st.error("🔌 เครื่องมือแต่งเพลงใช้พลังงานครบโควต้าแล้วครับ")
+        else:
+            st.warning("ระบุหัวข้อเพลงก่อนนะครับ")
 
 elif selected == "💳 สมัคร VIP":
     st.title("💳 Chomsuk.ai VIP")
