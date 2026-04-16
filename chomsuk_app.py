@@ -8,7 +8,7 @@ st.set_page_config(page_title="Chomsuk.ai - All-in-One AI", page_icon="🏆", la
 # 🔒 ใช้ Streamlit Secrets และเปลี่ยนเป็นรุ่น 2.0 Flash เพื่อความเสถียรครับ
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
 except:
     st.error("🔑 กรุณาตรวจสอบการตั้งค่า GEMINI_API_KEY ใน Streamlit Secrets นะครับ")
 
