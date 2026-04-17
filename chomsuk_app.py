@@ -114,3 +114,19 @@ elif selected == "💳 สมัคร VIP":
     st.title("💳 Chomsuk.ai VIP")
     st.write("ปลดล็อกฟีเจอร์ทั้งหมดและใช้งานได้ไม่จำกัด!")
     st.button("สมัครสมาชิก VIP คลิก")
+
+import google.generativeai as genai
+
+def generate_shopee_content(product_name, details):
+    # ใช้ Gemini 2.5 Flash เป็นสมองกล
+    model = genai.GenerativeModel('gemini-2.5-flash')
+    
+    prompt = f"""
+    คุณคือผู้เชี่ยวชาญการขายใน Shopee 
+    ช่วยเขียนคำโฆษณาสำหรับสินค้า: {product_name}
+    ข้อมูลดิบ: {details}
+    เป้าหมาย: เขียนให้คนอยากกดตะกร้าทันที พร้อมติด Hashtag ที่เป็นกระแส
+    """
+    
+    response = model.generate_content(prompt)
+    return response.text
