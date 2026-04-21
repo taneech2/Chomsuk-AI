@@ -17,8 +17,8 @@ with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/2103/2103633.png", width=80) 
     selected = option_menu(
         menu_title="เมนู Chomsuk.ai",
-        options=["💡 หาไอเดีย/หัวข้อ", "✍️ เสกคอนเทนต์", "🎨 สตูดิโอเจนภาพ", "🎵 สตูดิโอแต่งเพลง", "💳 สมัคร VIP"],
-        icons=["lightbulb", "pencil-square", "palette", "music-note-beamed", "person-badge"],
+        options=["💡 หาไอเดีย/หัวข้อ", "✍️ เสกคอนเทนต์", "🎨 สตูดิโอเจนภาพ", "🎵 สตูดิโอแต่งเพลง", "🎬 สตูดิโอเจนวีดีโอ", "💳 สมัคร VIP"],
+        icons=["lightbulb", "pencil-square", "palette", "music-note-beamed", "camera-video", "person-badge"],
         menu_icon="cast",
         default_index=0,
         styles={
@@ -57,34 +57,6 @@ if selected == "💡 หาไอเดีย/หัวข้อ":
                     st.error("🔌 ระบบขัดข้อง: โควต้าอาจจะเต็ม หรือการเชื่อมต่อมีปัญหา ลองกดใหม่อีกครั้งนะครับอาจารย์")
         else:
             st.warning("กรุณาใส่หัวข้อก่อนนะครับ!")
-
-    st.markdown("---")
-
-    # --- ส่วนที่ 2: สร้าง Video Prompt แยกต่างหาก ---
-    st.subheader("🎬 สร้าง Video Prompt สำหรับ AI Video")
-    st.caption("นำไอเดียที่ได้ด้านบนมาใส่ แล้วกดสร้าง Prompt สำหรับเครื่องมืออย่าง Kling, Luma, Sora")
-    video_topic = st.text_input("ใส่ไอเดีย/หัวข้อที่ต้องการเจนวิดีโอ:", placeholder="เช่น ช่างซ่อมมือถือช่วยลูกค้าแก้ปัญหาเร็วสุดๆ", key="video_topic")
-
-    if st.button("🎬 สร้าง Video Prompt"):
-        if video_topic:
-            with st.spinner("กำลังสร้าง Video Prompt..."):
-                try:
-                    video_prompt = f"""คุณคือผู้เชี่ยวชาญด้าน AI Video Prompt
-                    หัวข้อ: {video_topic}
-                    สร้าง Video Prompt ภาษาอังกฤษที่พร้อมใช้งานกับ Kling, Luma, Sora โดยระบุ:
-                    1. Scene description (ฉาก/บรรยากาศ)
-                    2. Camera movement (การเคลื่อนกล้อง)
-                    3. Style & mood (สไตล์และอารมณ์ภาพ)
-                    4. Lighting (แสง)
-                    ให้ครบในรูปแบบ Prompt เดียว พร้อมใช้ได้เลย
-                    """
-                    res = model.generate_content(video_prompt)
-                    st.code(res.text, language='text')
-                    st.caption("✅ ก๊อปปี้ Prompt ด้านบนไปวางในเครื่องมือเจนวิดีโอได้เลยครับ!")
-                except Exception as e:
-                    st.error("🔌 ระบบขัดข้อง ลองกดใหม่อีกครั้งนะครับ")
-        else:
-            st.warning("ใส่ไอเดียก่อนนะครับ!")
 
 elif selected == "✍️ เสกคอนเทนต์":
     st.title("✍️ เสกคอนเทนต์ (Script Generator)")
@@ -137,6 +109,33 @@ elif selected == "🎵 สตูดิโอแต่งเพลง":
                     st.error("🔌 เครื่องมือแต่งเพลงใช้พลังงานครบโควต้าแล้วครับ")
         else:
             st.warning("ระบุหัวข้อเพลงก่อนนะครับ")
+
+elif selected == "🎬 สตูดิโอเจนวีดีโอ":
+    st.title("🎬 สตูดิโอเจนวีดีโอ")
+    st.markdown("สร้าง Video Prompt พร้อมใช้งานกับ Kling, Luma, Sora และ AI Video ทุกตัว")
+
+    video_topic = st.text_input("ใส่ไอเดีย/หัวข้อที่ต้องการเจนวิดีโอ:", placeholder="เช่น ช่างซ่อมมือถือช่วยลูกค้าแก้ปัญหาเร็วสุดๆ")
+
+    if st.button("🎬 สร้าง Video Prompt"):
+        if video_topic:
+            with st.spinner("กำลังสร้าง Video Prompt..."):
+                try:
+                    video_prompt = f"""คุณคือผู้เชี่ยวชาญด้าน AI Video Prompt
+                    หัวข้อ: {video_topic}
+                    สร้าง Video Prompt ภาษาอังกฤษที่พร้อมใช้งานกับ Kling, Luma, Sora โดยระบุ:
+                    1. Scene description (ฉาก/บรรยากาศ)
+                    2. Camera movement (การเคลื่อนกล้อง)
+                    3. Style & mood (สไตล์และอารมณ์ภาพ)
+                    4. Lighting (แสง)
+                    ให้ครบในรูปแบบ Prompt เดียว พร้อมใช้ได้เลย
+                    """
+                    res = model.generate_content(video_prompt)
+                    st.code(res.text, language='text')
+                    st.caption("✅ ก๊อปปี้ Prompt ด้านบนไปวางในเครื่องมือเจนวิดีโอได้เลยครับ!")
+                except Exception as e:
+                    st.error("🔌 ระบบขัดข้อง ลองกดใหม่อีกครั้งนะครับ")
+        else:
+            st.warning("ใส่ไอเดียก่อนนะครับ!")
 
 elif selected == "💳 สมัคร VIP":
     st.title("💳 Chomsuk.ai VIP")
