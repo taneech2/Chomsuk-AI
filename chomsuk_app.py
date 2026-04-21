@@ -8,7 +8,7 @@ st.set_page_config(page_title="Chomsuk.ai - All-in-One AI", page_icon="🏆", la
 # 🔒 ใช้ Streamlit Secrets
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
 except Exception as e:
     st.error(f"🔑 เชื่อมต่อ API ไม่ได้: {e}")
 
