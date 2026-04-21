@@ -8,9 +8,9 @@ st.set_page_config(page_title="Chomsuk.ai - All-in-One AI", page_icon="🏆", la
 # 🔒 ใช้ Streamlit Secrets
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-2.5-flash')
-except:
-    st.error("🔑 กรุณาตรวจสอบการตั้งค่า GEMINI_API_KEY ใน Streamlit Secrets นะครับ")
+    model = genai.GenerativeModel('gemini-2.0-flash')
+except Exception as e:
+    st.error(f"🔑 เชื่อมต่อ API ไม่ได้: {e}")
 
 # 2. กำหนด session_state เริ่มต้น (ป้องกันข้อมูลหาย เมื่อสลับเมนู)
 defaults = {
@@ -66,8 +66,8 @@ if selected == "💡 หาไอเดีย/หัวข้อ":
                     """
                     res = model.generate_content(idea_prompt)
                     st.session_state.idea_result = res.text   # ✅ บันทึกผลลัพธ์
-                except Exception:
-                    st.error("🔌 ระบบขัดข้อง: โควต้าอาจจะเต็ม ลองกดใหม่อีกครั้งนะครับ")
+                except Exception as e:
+                    st.error(f"🔌 Error: {e}")
         else:
             st.warning("กรุณาใส่หัวข้อก่อนนะครับ!")
 
@@ -90,8 +90,8 @@ elif selected == "✍️ เสกคอนเทนต์":
                 try:
                     res = model.generate_content(f"เขียนสคริปต์ TikTok ขาย {detail} แบบเร้าใจ แยกเป็นฉากๆ")
                     st.session_state.script_result = res.text   # ✅ บันทึกผลลัพธ์
-                except:
-                    st.error("🔌 โควต้าใช้งานวันนี้อาจจะเต็มแล้วครับ")
+                except Exception as e:
+                    st.error(f"🔌 Error: {e}")
         else:
             st.warning("ใส่รายละเอียดก่อนนะครับ")
 
@@ -114,8 +114,8 @@ elif selected == "🎨 สตูดิโอเจนภาพ":
                 try:
                     res = model.generate_content(f"แปลและปรับแก้ข้อความนี้ให้เป็น Image Prompt ภาษาอังกฤษที่ละเอียดสำหรับ AI: {img_desc}")
                     st.session_state.image_result = res.text   # ✅ บันทึกผลลัพธ์
-                except:
-                    st.error("🔌 ระบบไม่ตอบสนอง ลองใหม่อีกครั้งครับ")
+                except Exception as e:
+                    st.error(f"🔌 Error: {e}")
         else:
             st.warning("บอกรายละเอียดภาพก่อนนะครับ")
 
@@ -145,8 +145,8 @@ elif selected == "🎵 สตูดิโอแต่งเพลง":
                     """
                     response = model.generate_content(music_prompt)
                     st.session_state.music_result = response.text   # ✅ บันทึกผลลัพธ์
-                except:
-                    st.error("🔌 เครื่องมือแต่งเพลงใช้พลังงานครบโควต้าแล้วครับ")
+                except Exception as e:
+                    st.error(f"🔌 Error: {e}")
         else:
             st.warning("ระบุหัวข้อเพลงก่อนนะครับ")
 
@@ -180,8 +180,8 @@ elif selected == "🎬 สตูดิโอเจนวีดีโอ":
                     """
                     res = model.generate_content(video_prompt)
                     st.session_state.video_result = res.text   # ✅ บันทึกผลลัพธ์
-                except Exception:
-                    st.error("🔌 ระบบขัดข้อง ลองกดใหม่อีกครั้งนะครับ")
+                except Exception as e:
+                    st.error(f"🔌 Error: {e}")
         else:
             st.warning("ใส่ไอเดียก่อนนะครับ!")
 
