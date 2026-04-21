@@ -35,28 +35,56 @@ with st.sidebar:
 # 3. Logic การทำงานของแต่ละเมนู
 if selected == "💡 หาไอเดีย/หัวข้อ":
     st.title("💡 หาไอเดียทำคอนเทนต์เงินล้าน")
-    topic = st.text_input("คุณอยากทำเรื่องอะไร?", placeholder="เช่น การซ่อมมือถือ, การลงทุน")
-    
+
+    # --- ส่วนที่ 1: สร้างไอเดีย/หัวข้อ ---
+    st.subheader("🧠 ปั้นไอเดียคอนเทนต์")
+    topic = st.text_input("คุณอยากทำเรื่องอะไร?", placeholder="เช่น การซ่อมมือถือ, การลงทุน", key="idea_topic")
+
     if st.button("ปั้นไอเดีย!"):
         if topic:
             with st.spinner("Chomsuk.ai กำลังใช้สมองกลคิดให้ครับ..."):
                 try:
-                    # ปรับพรอมต์ให้สร้างไอเดียพร้อม Video Prompt สำหรับ AI Video
                     idea_prompt = f"""คุณคือ Chomsuk.ai นักปั้น Content Creator
                     หัวข้อ: {topic}
                     ขอ 5 ไอเดียทำคลิปสั้นให้ไวรัล โดยแต่ละไอเดียต้องมี:
                     1. ชื่อหัวข้อที่น่าดึงดูด
                     2. สรุปเนื้อหาใน 1 ประโยค
-                    3. 🎬 Video Prompt (ภาษาอังกฤษ) สำหรับเอาไปเจนวิดีโอต่อใน AI (เช่น Kling, Luma, Sora)
+                    3. ฮุกเปิดคลิป (ประโยคแรกที่ดึงดูดคนดู)
                     """
                     res = model.generate_content(idea_prompt)
                     st.info(res.text)
-                    st.markdown("---")
-                    st.caption("🚀 อาจารย์ก๊อปปี้ Video Prompt ด้านบนไปใช้ในเครื่องมือเจนวิดีโอได้เลยครับ!")
                 except Exception as e:
                     st.error("🔌 ระบบขัดข้อง: โควต้าอาจจะเต็ม หรือการเชื่อมต่อมีปัญหา ลองกดใหม่อีกครั้งนะครับอาจารย์")
         else:
             st.warning("กรุณาใส่หัวข้อก่อนนะครับ!")
+
+    st.markdown("---")
+
+    # --- ส่วนที่ 2: สร้าง Video Prompt แยกต่างหาก ---
+    st.subheader("🎬 สร้าง Video Prompt สำหรับ AI Video")
+    st.caption("นำไอเดียที่ได้ด้านบนมาใส่ แล้วกดสร้าง Prompt สำหรับเครื่องมืออย่าง Kling, Luma, Sora")
+    video_topic = st.text_input("ใส่ไอเดีย/หัวข้อที่ต้องการเจนวิดีโอ:", placeholder="เช่น ช่างซ่อมมือถือช่วยลูกค้าแก้ปัญหาเร็วสุดๆ", key="video_topic")
+
+    if st.button("🎬 สร้าง Video Prompt"):
+        if video_topic:
+            with st.spinner("กำลังสร้าง Video Prompt..."):
+                try:
+                    video_prompt = f"""คุณคือผู้เชี่ยวชาญด้าน AI Video Prompt
+                    หัวข้อ: {video_topic}
+                    สร้าง Video Prompt ภาษาอังกฤษที่พร้อมใช้งานกับ Kling, Luma, Sora โดยระบุ:
+                    1. Scene description (ฉาก/บรรยากาศ)
+                    2. Camera movement (การเคลื่อนกล้อง)
+                    3. Style & mood (สไตล์และอารมณ์ภาพ)
+                    4. Lighting (แสง)
+                    ให้ครบในรูปแบบ Prompt เดียว พร้อมใช้ได้เลย
+                    """
+                    res = model.generate_content(video_prompt)
+                    st.code(res.text, language='text')
+                    st.caption("✅ ก๊อปปี้ Prompt ด้านบนไปวางในเครื่องมือเจนวิดีโอได้เลยครับ!")
+                except Exception as e:
+                    st.error("🔌 ระบบขัดข้อง ลองกดใหม่อีกครั้งนะครับ")
+        else:
+            st.warning("ใส่ไอเดียก่อนนะครับ!")
 
 elif selected == "✍️ เสกคอนเทนต์":
     st.title("✍️ เสกคอนเทนต์ (Script Generator)")
