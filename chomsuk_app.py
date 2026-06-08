@@ -585,6 +585,11 @@ elif selected == "🎵 สตูดิโอแต่งเพลง":
              "Acoustic / Folk 🎸", "Electronic / EDM 🎹",
              "Rock 🤘", "Metal / Hard Rock 🔥", "Hip-Hop / Rap 🎤",
              "Trap / Dark Rap 💀", "Reggae / Ska 🌴", "Jazz / Bossa Nova ☕",
+             "── ซึ้งๆ น้ำตาไหล ──",
+             "Ballad ซึ้งกินใจ 🥹", "Power Ballad ซึ้งระเบิด 💔",
+             "Soul / Neo-Soul อารมณ์ลึก 😢", "เพลงเพื่อชีวิต ความหมายหนัก 🌿",
+             "ลูกกรุง คลาสสิกไทย 🎼",
+             "── อื่นๆ ──",
              "🎼 แนวอื่นๆ — ระบุในช่องเพลงได้เลย"]
         )
     with col_l:
