@@ -572,7 +572,8 @@ elif selected == "🎵 สตูดิโอแต่งเพลง":
             ["Pop ไทย 🎵", "ลูกทุ่งอีสาน 🪗", "R&B / Soul 🎷",
              "Acoustic / Folk 🎸", "Electronic / EDM 🎹",
              "Rock 🤘", "Metal / Hard Rock 🔥", "Hip-Hop / Rap 🎤",
-             "Trap / Dark Rap 💀", "Reggae / Ska 🌴", "Jazz / Bossa Nova ☕"]
+             "Trap / Dark Rap 💀", "Reggae / Ska 🌴", "Jazz / Bossa Nova ☕",
+             "🎼 แนวอื่นๆ — ระบุในช่องเพลงได้เลย"]
         )
     with col_l:
         lang = st.selectbox(
