@@ -552,68 +552,50 @@ Aspect Ratio: {ar_code}
 # ═══════════════════════════════════════════════════════════════════════════════
 elif selected == "🎵 สตูดิโอแต่งเพลง":
     st.markdown('<div class="page-header">🎵 AI Songwriter Studio</div>', unsafe_allow_html=True)
-    st.markdown('<div class="page-sub">สร้างเพลงพร้อม Lyrics + Style Prompt สำหรับ Suno · Udio · Mureka</div>',
+    st.markdown('<div class="page-sub">บอกแค่ว่าอยากได้เพลงแบบไหน → ได้ Lyrics + Style Tag สำหรับ Suno / Udio ทันที</div>',
                 unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    with col1:
-        song_topic = st.text_area(
-            "หัวข้อ / ธีม / เรื่องเล่า:",
-            height=120,
-            placeholder="เช่น  เพลงแรงบันดาลใจครูช่างที่อยากให้ลูกศิษย์สู้ไม่ถอย ท่ามกลางประกายไฟในโรงเชื่อม"
+    song_topic = st.text_area(
+        "อยากได้เพลงแบบไหน? (บอกตรงๆ ภาษาอะไรก็ได้):",
+        height=120,
+        placeholder=(
+            "เช่น  เพลงลูกทุ่งอีสาน ฮึกเหิม ปลุกใจนักเรียนช่างสู้ไม่ถอย\n"
+            "หรือ  pop เศร้า ภาษาไทย เรื่องรอคนที่รัก\n"
+            "หรือ  rock สนุก เกี่ยวกับการเชื่อมโลหะ"
         )
-        lang = st.radio("ภาษาเพลง:",
-                        ["ภาษาไทย", "English", "Thai-English ผสม"],
-                        horizontal=True)
-    with col2:
-        genre = st.selectbox("แนวเพลง",
-                             ["Pop ไทย", "ลูกทุ่งอีสาน", "R&B/Soul", "Rock",
-                              "Electronic/EDM", "Acoustic/Folk", "Hip-Hop"])
-        mood = st.selectbox("อารมณ์เพลง",
-                            ["สร้างแรงบันดาลใจ", "ฮึกเหิม/ปลุกใจ", "สนุกสนาน",
-                             "โรแมนติก", "เศร้า/คิดถึง", "ผ่อนคลาย"])
-        suno_style = st.checkbox("สร้าง Style Tag สำหรับ Suno.com ด้วย", value=True)
+    )
 
     if st.button("🎸 แต่งเพลงเลย!", type="primary", use_container_width=True):
         if not song_topic:
-            st.warning("⚠️ ระบุหัวข้อเพลงก่อนนะครับ!")
+            st.warning("⚠️ บอกว่าอยากได้เพลงแบบไหนก่อนนะครับ!")
         else:
-            suno_block = """
-━━━ SUNO / UDIO STYLE TAG ━━━
-(ใส่ใน Style input ของ Suno.com หรือ Udio.com)
-Style:
-BPM:
-Key:""" if suno_style else ""
-
-            prompt = f"""คุณคือ Songwriter มืออาชีพ
+            prompt = f"""คุณคือ Songwriter มืออาชีพที่เชี่ยวชาญเพลงไทย
 {kru_ctx()}
-หัวข้อ/ธีม: {song_topic}
-แนวเพลง: {genre}
-อารมณ์: {mood}
-ภาษา: {lang}
+โจทย์: {song_topic}
 
-แต่งเพลงสมบูรณ์:
+วิเคราะห์โจทย์แล้วเลือกแนวเพลง ภาษา และอารมณ์ที่เหมาะที่สุดเอง
+จากนั้นแต่งเพลงให้สมบูรณ์:
 
 ━━━ ชื่อเพลง ━━━
 
 ━━━ LYRICS ━━━
-[Intro]
-
 [Verse 1]
-
-[Pre-Chorus]
 
 [Chorus]
 
 [Verse 2]
 
+[Chorus]
+
 [Bridge]
 
-[Outro / Final Chorus]{suno_block}
+[Outro]
 
-━━━ Notes สำหรับนักดนตรี ━━━
-คอร์ดแนะนำ:
-จังหวะ:"""
+━━━ SUNO / UDIO STYLE TAG ━━━
+(copy วางใน Style box ของ Suno.com หรือ Udio.com ได้เลย)
+Style prompt:
+BPM:
+Key:"""
             with st.spinner(""):
                 stream_ai(prompt, "music_result")
 
