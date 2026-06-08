@@ -556,31 +556,47 @@ elif selected == "🎵 สตูดิโอแต่งเพลง":
                 unsafe_allow_html=True)
 
     song_topic = st.text_area(
-        "อยากได้เพลงเรื่องอะไร? บอกสั้นๆ:",
-        height=100,
+        "อยากได้เพลงเรื่องอะไร?  (ระบุแนวพิเศษเพิ่มได้ในช่องนี้เลย):",
+        height=110,
         placeholder=(
             "เช่น  ปลุกใจนักเรียนช่างสู้ไม่ถอย\n"
-            "หรือ  รอคนที่รัก\n"
-            "หรือ  ความภูมิใจในอาชีพช่างเชื่อม"
+            "หรือ  รอคนที่รัก ทำเป็น sad ballad\n"
+            "หรือ  ความภูมิใจช่างเชื่อม — แนว death metal สุดโหด 🔥\n"
+            "หรือ  เพลงภาษาเกาหลี K-pop ซาบซึ้ง"
         )
     )
-    genre = st.selectbox(
-        "แนวเพลง:",
-        ["Pop ไทย 🎵", "ลูกทุ่งอีสาน 🪗", "R&B / Soul 🎷",
-         "Acoustic / Folk 🎸", "Electronic / EDM 🎹", "Rock 🤘", "Hip-Hop / Rap 🎤"]
-    )
+    col_g, col_l = st.columns(2)
+    with col_g:
+        genre = st.selectbox(
+            "แนวเพลง:",
+            ["Pop ไทย 🎵", "ลูกทุ่งอีสาน 🪗", "R&B / Soul 🎷",
+             "Acoustic / Folk 🎸", "Electronic / EDM 🎹",
+             "Rock 🤘", "Metal / Hard Rock 🔥", "Hip-Hop / Rap 🎤",
+             "Trap / Dark Rap 💀", "Reggae / Ska 🌴", "Jazz / Bossa Nova ☕"]
+        )
+    with col_l:
+        lang = st.selectbox(
+            "ภาษา:",
+            ["ไทย 🇹🇭", "English 🇺🇸", "ไทย-อังกฤษ ผสม 🌐",
+             "อีสาน / ภาษาถิ่น", "ภาษาอื่น (ระบุในช่องเพลง)"]
+        )
 
     if st.button("🎸 แต่งเพลงเลย!", type="primary", use_container_width=True):
         if not song_topic:
             st.warning("⚠️ บอกหัวข้อก่อนนะครับ!")
         else:
-            prompt = f"""คุณคือ Songwriter มืออาชีพที่เชี่ยวชาญเพลงไทย
+            prompt = f"""คุณคือ Songwriter มืออาชีพที่แต่งเพลงได้ทุกแนว
 {kru_ctx()}
-โจทย์: {song_topic}
+โจทย์/เนื้อหา: {song_topic}
 แนวเพลง: {genre}
+ภาษา: {lang}
 
-แต่งเพลงให้ตรงแนวที่กำหนด ห้ามเปลี่ยนแนวเอง
-เนื้อเพลงต้องเชื่อมโยงกับโจทย์ทุกท่อน ไม่ใช่แค่ชื่อ
+กฎเหล็ก:
+- แต่งให้ตรงแนวและภาษาที่กำหนด ห้ามเปลี่ยนเอง
+- ถ้าในโจทย์ระบุแนวพิเศษเพิ่ม (เช่น death metal / K-pop / ภาษาเกาหลี) ให้ยึดโจทย์ก่อน
+- เนื้อเพลงต้องเชื่อมโยงกับโจทย์ทุกท่อน ไม่ใช่แค่ชื่อเพลง
+- แนว Rock/Metal/Rap ให้เขียน lyrics สไตล์นั้นจริงๆ (aggressive, rhyme scheme, flow)
+
 แต่งเพลงให้สมบูรณ์:
 
 ━━━ ชื่อเพลง ━━━
