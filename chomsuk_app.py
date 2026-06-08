@@ -141,14 +141,26 @@ def stream_ai(prompt: str, state_key: str):
     try:
         response = model.generate_content(prompt, stream=True)
         for chunk in response:
-            if chunk.text:
-                full_text += chunk.text
-                # แสดง cursor กระพริบขณะ stream
-                placeholder.markdown(full_text + " ▌")
-        # ลบ cursor ออกเมื่อเสร็จ
+            try:
+                if chunk.text:
+                    full_text += chunk.text
+                    placeholder.markdown(full_text + " ▌")
+            except Exception:
+                # chunk ถูก Gemini Safety block — ข้ามไป
+                pass
+
         placeholder.markdown(full_text)
-        st.session_state[state_key] = full_text
-        st.session_state.usage_count += 1
+
+        if not full_text:
+            # Response ว่างทั้งหมด = โดน Safety Filter
+            placeholder.warning(
+                "⚠️ Gemini ไม่สามารถสร้างเนื้อหานี้ได้ เนื่องจาก Safety Filter\n\n"
+                "💡 ลองเปลี่ยน: ลดความรุนแรงของคำในโจทย์ หรือเลือกแนวเพลงอื่น แล้วกดใหม่อีกครั้งครับ"
+            )
+        else:
+            st.session_state[state_key] = full_text
+            st.session_state.usage_count += 1
+
     except Exception as err:
         st.error(f"❌ Gemini Error: {err}")
         full_text = ""
