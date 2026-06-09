@@ -167,24 +167,25 @@ def stream_ai(prompt: str, state_key: str):
     return full_text
 
 
-def show_result(state_key: str, filename: str = "output.txt"):
+def show_result(state_key: str, filename: str = "output.txt", key_suffix: str = ""):
     """
     แสดง result box พร้อม copy button (built-in ใน st.code) และ download
+    key_suffix ใช้เมื่อเรียกหลายครั้งใน page เดียวกัน เพื่อไม่ให้ key ซ้ำ
     """
     txt = st.session_state.get(state_key, "")
     if not txt:
         return
     st.markdown('<p class="result-header">📋 ผลลัพธ์  —  กด Copy ได้เลย (ไอคอนมุมขวา)</p>',
                 unsafe_allow_html=True)
-    # st.code() มี copy button ในตัว ✅
     st.code(txt, language="")
     col1, col2 = st.columns(2)
     with col1:
         st.download_button("💾 บันทึกเป็น .txt", txt,
                            file_name=filename, mime="text/plain",
-                           use_container_width=True)
+                           use_container_width=True,
+                           key=f"dl_{state_key}{key_suffix}")
     with col2:
-        if st.button("🗑️ ล้างผลลัพธ์", key=f"clear_{state_key}",
+        if st.button("🗑️ ล้างผลลัพธ์", key=f"clear_{state_key}{key_suffix}",
                      use_container_width=True):
             st.session_state[state_key] = ""
             st.rerun()
@@ -438,7 +439,7 @@ Q3: / A3:
                 with st.spinner(""):
                     stream_ai(prompt, "shopee_result")
 
-        show_result("shopee_result", "affiliate_content.txt")
+        show_result("shopee_result", "affiliate_content.txt", key_suffix="_review")
 
     # ── Tab: แผน 7 วัน ────────────────────────────────────────────────────────
     with tab_plan:
@@ -491,7 +492,7 @@ Q3: / A3:
                 with st.spinner(""):
                     stream_ai(prompt, "shopee_result")
 
-        show_result("shopee_result", "7day_plan.txt")
+        show_result("shopee_result", "7day_plan.txt", key_suffix="_7day")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -723,7 +724,7 @@ elif selected == "🎬 สตูดิโอเจนวีดีโอ":
                 with st.spinner(""):
                     stream_ai(prompt, "video_result")
 
-        show_result("video_result", "video_prompt.txt")
+        show_result("video_result", "video_prompt.txt", key_suffix="_single")
 
     # ── Tab: Music Video Storyboard ───────────────────────────────────────────
     with tab_mv:
@@ -798,7 +799,7 @@ Scene 2 (0:05–0:10) — [ชื่อ scene]
                 with st.spinner(""):
                     stream_ai(prompt, "video_result")
 
-        show_result("video_result", "music_video_storyboard.txt")
+        show_result("video_result", "music_video_storyboard.txt", key_suffix="_mv")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
