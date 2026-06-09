@@ -95,7 +95,7 @@ st.markdown("""
 # ─── API SETUP ───────────────────────────────────────────────────────────────
 try:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel("gemini-2.5-flash")
+    model = genai.GenerativeModel("gemini-3.5-flash")
 except Exception as e:
     st.error(f"🔑 เชื่อมต่อ Gemini API ไม่ได้: {e}")
     st.stop()
