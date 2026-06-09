@@ -658,38 +658,42 @@ Key:"""
 # ═══════════════════════════════════════════════════════════════════════════════
 elif selected == "🎬 สตูดิโอเจนวีดีโอ":
     st.markdown('<div class="page-header">🎬 AI Video Prompt Studio</div>', unsafe_allow_html=True)
-    st.markdown('<div class="page-sub">สร้าง Prompt สำหรับ Kling AI · Luma Dream Machine · Runway Gen-3 · Sora</div>',
+    st.markdown('<div class="page-sub">สร้าง Prompt สำหรับ Kling AI · Luma · Runway · Google Flow · Sora</div>',
                 unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    with col1:
-        vid_topic = st.text_area(
-            "ไอเดีย/เนื้อหาวีดีโอ:",
-            height=130,
-            placeholder="เช่น  ช่างเชื่อม MIG กำลังเชื่อมโครงสร้างเหล็ก H-Beam สูง 10 เมตร แสงอาทิตย์ตอนเย็น ประกายไฟสีทองพุ่ง"
-        )
-        vid_tool = st.selectbox("เครื่องมือ AI Video",
-                                ["Kling AI 1.6", "Luma Dream Machine", "Runway Gen-3",
-                                 "Google Flow (Veo 2)", "Sora (OpenAI)", "Pika 2.0", "ทั่วไป"])
-    with col2:
-        v_style = st.selectbox("สไตล์",
-                               ["Cinematic / ภาพยนตร์", "Documentary สารคดี",
-                                "Music Video", "Product Demo", "Social Media Short",
-                                "Time-lapse / Hyperlapse"])
-        v_dur = st.selectbox("ความยาว", ["5 วินาที", "10 วินาที", "15 วินาที", "30 วินาที"])
-        cam_moves = st.multiselect(
-            "การเคลื่อนกล้อง",
-            ["Slow motion 240fps", "Extreme close-up", "Wide establishing shot",
-             "Drone aerial", "Tracking shot", "Dolly push-in", "Handheld"],
-            default=["Slow motion 240fps", "Extreme close-up"]
-        )
+    tab_single, tab_mv = st.tabs(["🎬 คลิปเดี่ยว", "🎵 Music Video Storyboard"])
 
-    if st.button("🎬 สร้าง Video Prompt!", type="primary", use_container_width=True):
-        if not vid_topic:
-            st.warning("⚠️ ใส่ไอเดียก่อนนะครับ!")
-        else:
-            cam_txt = ", ".join(cam_moves) if cam_moves else "auto"
-            prompt = f"""คุณคือ AI Video Director ผู้เชี่ยวชาญ {vid_tool}
+    # ── Tab: คลิปเดี่ยว ──────────────────────────────────────────────────────
+    with tab_single:
+        col1, col2 = st.columns(2)
+        with col1:
+            vid_topic = st.text_area(
+                "ไอเดีย/เนื้อหาวีดีโอ:",
+                height=130,
+                placeholder="เช่น  ช่างเชื่อม MIG กำลังเชื่อมโครงสร้างเหล็ก H-Beam สูง 10 เมตร แสงอาทิตย์ตอนเย็น ประกายไฟสีทองพุ่ง"
+            )
+            vid_tool = st.selectbox("เครื่องมือ AI Video",
+                                    ["Kling AI 1.6", "Luma Dream Machine", "Runway Gen-3",
+                                     "Google Flow (Veo 2)", "Sora (OpenAI)", "Pika 2.0", "ทั่วไป"])
+        with col2:
+            v_style = st.selectbox("สไตล์",
+                                   ["Cinematic / ภาพยนตร์", "Documentary สารคดี",
+                                    "Music Video", "Product Demo", "Social Media Short",
+                                    "Time-lapse / Hyperlapse"])
+            v_dur = st.selectbox("ความยาว", ["5 วินาที", "10 วินาที", "15 วินาที", "30 วินาที"])
+            cam_moves = st.multiselect(
+                "การเคลื่อนกล้อง",
+                ["Slow motion 240fps", "Extreme close-up", "Wide establishing shot",
+                 "Drone aerial", "Tracking shot", "Dolly push-in", "Handheld"],
+                default=["Slow motion 240fps", "Extreme close-up"]
+            )
+
+        if st.button("🎬 สร้าง Video Prompt!", type="primary", use_container_width=True):
+            if not vid_topic:
+                st.warning("⚠️ ใส่ไอเดียก่อนนะครับ!")
+            else:
+                cam_txt = ", ".join(cam_moves) if cam_moves else "auto"
+                prompt = f"""คุณคือ AI Video Director ผู้เชี่ยวชาญ {vid_tool}
 {kru_ctx()}
 เนื้อหา: {vid_topic}
 เครื่องมือ: {vid_tool}
@@ -710,18 +714,91 @@ elif selected == "🎬 สตูดิโอเจนวีดีโอ":
 
 ━━━ COLOR GRADE & MOOD ━━━
 
-━━━ SOUND DESIGN แนะนำ ━━━
-
 ━━━ SETTINGS สำหรับ {vid_tool} ━━━
   Aspect Ratio:
   Motion Strength:
   Seed / Style Ref:
 
 ━━━ NEGATIVE PROMPT ━━━"""
-            with st.spinner(""):
-                stream_ai(prompt, "video_result")
+                with st.spinner(""):
+                    stream_ai(prompt, "video_result")
 
-    show_result("video_result", "video_prompt.txt")
+        show_result("video_result", "video_prompt.txt")
+
+    # ── Tab: Music Video Storyboard ───────────────────────────────────────────
+    with tab_mv:
+        st.markdown('<div class="tip-box">🎬 วิธีทำ: สร้าง Storyboard → เจนคลิปที่ 1 → Export last frame → ใช้เป็น input คลิปที่ 2 → ต่อกันไปเรื่อยๆ</div>',
+                    unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+        with col1:
+            mv_song = st.text_area(
+                "ชื่อเพลง / เนื้อหาเพลง / อารมณ์:",
+                height=100,
+                placeholder="เช่น  เพลงลูกทุ่งปลุกใจนักเรียนช่าง — ประกายไฟในโรงเชื่อม ความฝัน ความอดทน"
+            )
+            mv_character = st.text_input(
+                "ตัวละครหลัก (เพื่อความสม่ำเสมอ):",
+                placeholder="เช่น  ชายหนุ่มไทย อายุ 20 สวมชุดช่างสีส้ม หน้ากากเชื่อม"
+            )
+        with col2:
+            mv_tool = st.selectbox("เครื่องมือ AI Video", [
+                "Kling AI 1.6", "Luma Dream Machine", "Runway Gen-3",
+                "Google Flow (Veo 2)", "Sora (OpenAI)", "ทั่วไป"
+            ], key="mv_tool")
+            mv_style = st.selectbox("Visual Style", [
+                "Cinematic ภาพยนตร์ไทย", "Dark & Dramatic", "Bright & Colorful",
+                "Documentary สารคดี", "Dreamy / Soft"
+            ])
+            mv_scenes = st.slider("จำนวน Scene (คลิป 5 วิ/คลิป)", 4, 12, 8)
+
+        if st.button("🎵 สร้าง Music Video Storyboard!", type="primary", use_container_width=True):
+            if not mv_song:
+                st.warning("⚠️ ใส่รายละเอียดเพลงก่อนนะครับ!")
+            else:
+                char_line = f"ตัวละครหลัก: {mv_character}" if mv_character else ""
+                total_sec = mv_scenes * 5
+                prompt = f"""คุณคือ Music Video Director ผู้เชี่ยวชาญ AI Video Generation
+{kru_ctx()}
+เพลง/อารมณ์: {mv_song}
+{char_line}
+เครื่องมือ: {mv_tool}
+Visual Style: {mv_style}
+จำนวน Scene: {mv_scenes} คลิป (คลิปละ 5 วินาที = รวม {total_sec} วินาที)
+
+สร้าง Music Video Storyboard แบบต่อเนื่อง:
+
+━━━ BASE PROMPT (ใช้ทุกคลิป — copy ติดไว้) ━━━
+(Visual style, lighting, color grade, character description ที่เหมือนกันทั้งหมด)
+
+━━━ CHARACTER REFERENCE ━━━
+(บรรยายตัวละครหลักให้ละเอียด ใช้ทุกคลิป)
+
+━━━ STORYBOARD {mv_scenes} SCENES ━━━
+(แต่ละ scene ต้องมี):
+
+Scene 1 (0:00–0:05) — [ชื่อ scene]
+  🎬 Prompt: [BASE PROMPT] + [action เฉพาะ scene นี้]
+  📸 Last Frame: [บรรยายภาพสุดท้ายที่จะ export ไปใช้ต่อ]
+  🎵 เชื่อมกับเพลง: [ช่วงไหนของเพลง]
+
+Scene 2 (0:05–0:10) — [ชื่อ scene]
+  🎬 Prompt: [BASE PROMPT] + [action — ต้องรับจาก Last Frame scene 1]
+  📸 Last Frame:
+  🎵 เชื่อมกับเพลง:
+
+... ต่อไปครบ {mv_scenes} scenes
+
+━━━ TIPS การต่อคลิปให้ Smooth ━━━
+(เทคนิคเฉพาะสำหรับ {mv_tool})
+
+━━━ EDITING GUIDE ━━━
+(ลำดับการตัดต่อ + transition แนะนำ)"""
+
+                with st.spinner(""):
+                    stream_ai(prompt, "video_result")
+
+        show_result("video_result", "music_video_storyboard.txt")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
