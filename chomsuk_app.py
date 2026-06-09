@@ -670,7 +670,7 @@ elif selected == "🎬 สตูดิโอเจนวีดีโอ":
         )
         vid_tool = st.selectbox("เครื่องมือ AI Video",
                                 ["Kling AI 1.6", "Luma Dream Machine", "Runway Gen-3",
-                                 "Sora (OpenAI)", "Pika 2.0", "ทั่วไป"])
+                                 "Google Flow (Veo 2)", "Sora (OpenAI)", "Pika 2.0", "ทั่วไป"])
     with col2:
         v_style = st.selectbox("สไตล์",
                                ["Cinematic / ภาพยนตร์", "Documentary สารคดี",
