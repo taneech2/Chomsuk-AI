@@ -602,13 +602,53 @@ elif selected == "🎵 สตูดิโอแต่งเพลง":
 
     voice = st.radio(
         "เสียงนักร้อง:",
-        ["ชาย 🎤", "หญิง 🎙️", "ชาย+หญิง (Duet) 🎤🎙️", "วง / หมู่คณะ 🎶"],
+        ["ชาย 🎤", "หญิง 🎙️", "ชาย+หญิง (Duet) 🎤🎙️", "วง / หมู่คณะ 🎶",
+         "🎹 บรรเลง (ไม่มีเนื้อร้อง)"],
         horizontal=True
     )
+
+    is_instrumental = "บรรเลง" in voice
+    if is_instrumental:
+        st.info("🎹 โหมดบรรเลง — ไม่มีเนื้อร้อง แต่มี**เรื่องราว** ทำให้เพลงขายได้ทั้งโลก ใช้ประกอบคลิป YouTube ได้ด้วย")
 
     if st.button("🎸 แต่งเพลงเลย!", type="primary", use_container_width=True):
         if not song_topic:
             st.warning("⚠️ บอกหัวข้อก่อนนะครับ!")
+        elif is_instrumental:
+            prompt = f"""คุณคือ Music Producer มืออาชีพ เชี่ยวชาญเพลงบรรเลง (Instrumental) สำหรับขายบน Streaming และใช้ประกอบคลิป YouTube
+{kru_ctx()}
+โจทย์/เรื่องราวของเพลง: {song_topic}
+แนวเพลง: {genre}
+
+กฎเหล็ก:
+- เพลงนี้ไม่มีเนื้อร้อง — แต่ต้องมีเรื่องราวที่คนฟังรู้สึกได้
+- ชื่อเพลงต้องเล่าเรื่อง ไม่ใช่ชื่อจืดๆ (เช่น "เสียงเตาเผาตอนตี 5" ไม่ใช่ "Lo-fi #42")
+- ให้ตรงแนวเพลงที่กำหนด ห้ามเปลี่ยนเอง
+- Style Tag ต้องระบุ "instrumental" ชัดเจน เพื่อให้ Suno ไม่ใส่เสียงร้อง
+
+สร้างให้ครบชุด:
+
+━━━ ชื่อเพลง (ไทย + English) ━━━
+
+━━━ เรื่องราวของเพลง ━━━
+(2-3 ประโยค — ความรู้สึก ภาพ บรรยากาศที่เพลงนี้เล่า)
+
+━━━ โครงสร้างเพลง ━━━
+(Intro → Build → Drop/Climax → Outro พร้อมบอกอารมณ์แต่ละช่วง)
+
+━━━ คำอธิบาย YouTube / Spotify ━━━
+(copy วางใน description ได้เลย มี hashtag ให้ด้วย)
+
+━━━ SUNO / UDIO STYLE TAG ━━━
+(copy วางใน Style box ได้เลย — ต้องมีคำว่า instrumental, no vocals)
+Style prompt:
+BPM:
+Key:
+
+━━━ PROMPT ปกอัลบั้ม ━━━
+(copy ไปใช้ในสตูดิโอเจนภาพได้เลย — บรรยากาศต้องตรงกับเรื่องราวเพลง)"""
+            with st.spinner(""):
+                stream_ai(prompt, "music_result")
         else:
             prompt = f"""คุณคือ Songwriter มืออาชีพที่แต่งเพลงได้ทุกแนว
 {kru_ctx()}
